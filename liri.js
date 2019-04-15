@@ -36,7 +36,8 @@ function concertThis() {
     let userBand = JSON.parse(body);
     if (userBand.length > 0){
       for (i = 0; i>1; i++){
-        console.log("Artist: " + ${userBand[i].lineup[0]})
+        console.log(`"Artist: " + ${userBand[i].lineup[0]}`);
+        console.log(`"Venue City: " + ${userBand.venue.name}`)
       }
     }
     
