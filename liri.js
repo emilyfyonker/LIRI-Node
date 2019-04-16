@@ -11,8 +11,8 @@ const fs = require("fs");
 var keys = require("./keys.js");
 
 //initialize spotify
-var Spotify = require("node-spotify-api:");
-var spotify = new Spotify(keys.spotify);
+const Spotify = require("node-spotify-api");
+const spotify = new Spotify(keys.spotify);
 
 //OMDB AND BANDS IN TOWN APIs
 let omdb = (keys.omdb);
@@ -28,88 +28,69 @@ function userCommand(userInput, userQuery) {
   //make decision based on command
   switch (userInput) {
     case "concert-this":
-    concertThis();
+      concertThis();
       break;
     case "spotify-this-song":
       spotifyThis();
-        break;
+      break;
     case "movie-this":
       movieThis();
-        break;
+      break;
     case "do-what-it-says":
-    doWhatItSays(userQuery);
+      doWhatItSays(userQuery);
+      break;
+  }
+}
 
+
+function concertThis() {
+  axios
+    .get("https://rest.bandsintown.com/artists/" + userQuery + "/events?app_id=codingbootcamp")
+    .then(function (res) {
+      //console.log(res.data)
+      console.log("Venue Name: " + res.data[0].venue.name);
+      console.log("Venue City: " + res.data[0].venue.city); 
+console.log("Date: " + moment(res.data[0].datetime).format('MM/DD/YYYY'))
+    })
+};
+
+
+function spotifyThis() {
+ 
+    var spotify = new Spotify(keys.spotify);
+    spotify.search({ type: 'track', query: userQuery }, function (err, data) {
+      if (err) {
+        return console.log('Error occurred: ' + err);
+      }
+      console.log(data.tracks.items[0].artists[0].name);
+      console.log(data.tracks.items[0].name);
+      console.log(data.tracks.items[0].artists[0].external_urls);
+      console.log(data.tracks.items[0].album.name);
+    });
   }
 
-}
 
 
-// function concertThis() {
-//   axios.get("https://rest.bandsintown.com/artists/" + userQuery + "/events?app_id=codingbootcamp")
-//     .then(function (res) {
-//       //console.log(res.data)
-//       console.log("Venue Name: " + res.data[0].venue.name);
-//       console.log("Venue City: " + res.data[0].venue.city);
-//       console.log("Date: " + moment(res.data[0].datetime).format('MMMM Do YYYY'))
-//     })
-// };
-
-
-// function spotifyThis() {
-//   if (userQuery === undefined || null) {
-//     userQuery = "The Sign Ace of Base";
-// }
-// //spotify search and query format
-// spotify.search({ type: 'track', query: userQuery, limit: 1 }, function(error, data) {
-// if (error) {
-//   return console.log('Error occured: ' + error);
-// }
-// // //collect selected data in array
-// let spotifyArr = data.tracks.items;
-
-// for (i = 0; i< spotifyArr.length; i++) {
-//    console.log(`\nArtist: ${userQuery.tracks.items[i].album.artists[0].name}`);
-//    //console.log(response)
-// };
-
-// });
-// }
-
-
-function movieThis(){
-  if (userQuery === undefined || null) {
-    userQuery = "Mr.Nobody";
-}
-var queryUrl = "http://www.omdbapi.com/?t=" + userQuery + "&y=&plot=short&apikey=trilogy";
-  // JSON.parse for legibility
-  axios.get(queryUrl).then(
+function movieThis() {
+  console.log("hello")
+  axios.get("http://www.omdbapi.com/?t=" + userQuery + "&y=&plot=short&apikey=trilogy").then(
     function (response) {
-      // console.log("Title: " + response.data.Title);
-      // console.log("Release Year: " + response.data.Year);
-      // console.log("Plot: " + response.data.Plot);
-      // console.log("Actors: " + response.data.Actors);
-      // console.log("Rated: " + response.data.Rated);
-      // console.log("This movie was produced in: " + response.data.Country);
-      // console.log("Language: " + response.data.Language);
-      // console.log("IMDB Rating: " + response.data.imdbRating);
-      // console.log("RT Rating: " + response.data.Ratings[1].Value);
+      console.log("Title: " + response.data.Title);
+      console.log("Release Year: " + response.data.Year);
+      console.log("Plot: " + response.data.Plot);
+      console.log("Actors: " + response.data.Actors);
+      console.log("Rated: " + response.data.Rated);
+      console.log("This movie was produced in: " + response.data.Country);
+      console.log("Language: " + response.data.Language);
+      console.log("IMDB Rating: " + response.data.imdbRating);
+      console.log("RT Rating: " + response.data.Ratings[1].Value);
       //console.log(JSON.stringify(response.data, null, 2));
-  });
+    })
 }
   
 
 
-function spotifyThisSong() {
-
-}
-
-function movieThis(){
-
-}
-
-function doWhatItSays(){
-
-}
+  
 
 userCommand(userInput, userQuery);
 
